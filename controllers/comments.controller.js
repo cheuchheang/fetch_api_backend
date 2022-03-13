@@ -1,5 +1,9 @@
 const db = require("./../models");
-
+{
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                                    Get all commments
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+}
 const getComments = async (req, res) => {
   try {
     const response = await db.comments.find();
@@ -18,7 +22,11 @@ const getComments = async (req, res) => {
     throw error;
   }
 };
-
+{
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                                    Create a comment
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+}
 const createComment = async (req, res) => {
   const body = req.body;
   if (Object.keys(body).length == 0) {
@@ -49,6 +57,11 @@ const createComment = async (req, res) => {
     });
   }
 };
+{
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                                    Update a comment
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+}
 const updateComment = async (req, res) => {
   const { id } = req.params;
   const body = req.body;
@@ -67,7 +80,11 @@ const updateComment = async (req, res) => {
     });
   }
 };
-
+{
+  /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+                                    Delete a comment
+   * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+}
 const deleteComment = async (req, res) => {
   const { id } = req.params;
   try {
