@@ -1,9 +1,12 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
+app.use(bodyParser.urlencoded())
 const dotenv = require("dotenv");
 dotenv.config();
 const port = process.env.port;
-
+const connectionDB = require("./utils/db/connection");
+connectionDB();
 //all routes
 require("./routes/articleContents.routes")(app);
 require("./routes/comments.routes")(app);
