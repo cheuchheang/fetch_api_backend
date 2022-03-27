@@ -5,21 +5,65 @@ const db = require("./../models");
    * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 }
 const getComments = async (req, res) => {
+  const { page } = req.query;
+  let pages;
+  let prevPage = null;
+  let nextPage = null;
+  let limit = 10;
+  if (req.query.limit <= 0 || page <= 0) {
+    res
+      .status(400)
+      .send({ message: "bad request or limit>0 or page >0", statusCode: 400 });
+  }
+
+  if (req.query.limit) {
+    limit = req.query.limit;
+  }
   try {
-    const response = await db.comments.find();
-    res.status(200).send({
-      message: "get comment success",
-      data: response,
-      count: response.length,
-      status: 200,
-    });
+    const total = await db.comments.find().count();
+
+    if (total % limit == 0) {
+      pages = total / limit;
+    } else {
+      pages = parseInt(total / limit) + 1;
+    }
+
+    if (page) {
+      const comments = await db.comments
+        .find()
+        .skip((page - 1) * limit)
+        .limit(limit);
+
+      if (page != 1) {
+        prevPage = `http://localhost:${process.env.port}/place/comments?page=${
+          Number(page) - 1
+        }&limit=${limit}`;
+      }
+
+      if (page < pages) {
+        nextPage = `http://localhost:${process.env.port}/place/comments?page=${
+          Number(page) + 1
+        }&limit=${limit}`;
+      }
+      res.status(200).send({
+        message: "get comment success",
+        data: comments,
+        pages: pages,
+        count: comments.length,
+        total: total,
+        firstPage: `http://localhost:${process.env.port}/place/comments?page=1&limit=${limit}`,
+        prevPage: prevPage,
+        nextPage: nextPage,
+        lastPage: `http://localhost:${process.env.port}/place/comments?page=${pages}&limit=${limit}`,
+      });
+    } else {
+      const comments = await db.comments.find();
+      res
+        .status(200)
+        .send({ data: comments, count: comments.length, total: total });
+    }
   } catch (err) {
-    res.status(500).send({
-      message: "Unsuccessful",
-      error: error,
-      statusCode: 500,
-    });
-    throw error;
+    res.status(500).send({ statusCode: 500, message: err });
   }
 };
 {

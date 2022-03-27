@@ -5,7 +5,7 @@ const Contents = require("./contents.model");
 const Navigations = require("./navigationBar.model");
 
 let db = {};
-db.mongoose;
+db.mongoose=mongoose;
 db.navigations = Navigations;
 db.contents = Contents;
 db.comments = Comments;
