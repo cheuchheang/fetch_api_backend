@@ -2,7 +2,8 @@ const db = require(" ./../../models/articleContents.model");
 const { response } = require("express");
 
 const getArticleContents = async (req,res)=>{
-  const title = req.query.title
+  const title = req.query.title;
+  const authorName = req.query.authorName;
   const page = req.query.page;
   // we can write const {title,page} = req.query;
 
@@ -12,7 +13,6 @@ const getArticleContents = async (req,res)=>{
     limit = req.query.limit;
   }
   try{
-  //
   const total = await db.articles.find().count();
   if(total%limit){
      pages=total/limit;
@@ -20,10 +20,25 @@ const getArticleContents = async (req,res)=>{
   else{
     pages=parseInt(total/limit)+1;
   }
-  if(title){
+  if(title && authorName){
+    const response = await db.articles.find({$and: [{title:{$regex:title, $options:"i"}}, {authorName:{$regex:authorName, $options:"i"}}] });
+    res.status(200).send({
+      data: response,
+      count:response.length,
+      status:200,
+    });
+  }
+ if(title){
     const response = await db.articles.find({title:{$regex:title, $options:"i"}});
     res.status(200).send({
-      // message:"get article successfully",
+      data: response,
+      count:response.length,
+      status:200,
+    });
+  }
+  if(authorName){
+    const response = await db.articles.find({authorName:{$regex:authorName, $options:"i"}});
+    res.status(200).send({
       data: response,
       count:response.length,
       status:200,

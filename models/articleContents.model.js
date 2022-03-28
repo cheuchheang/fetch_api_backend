@@ -14,7 +14,7 @@ const articleSchema =mongoose.Schema(
         type: String,
         required: true,
       },
-      name: {
+      authorName: {
         type: String,
         required: true,
       },

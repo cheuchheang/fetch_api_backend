@@ -1,6 +1,6 @@
-module.exports = {
-  getContents,
-  createContent,
-  updateContent,
-  deleteContent,
-};
+// module.exports = {
+//   getContents,
+//   createContent,
+//   updateContent,
+//   deleteContent,
+// };

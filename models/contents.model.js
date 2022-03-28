@@ -1,3 +1,3 @@
 
-const Contents = mongoose.model("contents", contentSchema);
-module.exports = Contents;
+// const Contents = mongoose.model("contents", contentSchema);
+// module.exports = Contents;
