@@ -36,15 +36,31 @@ const getArticleContentsNew = async (req, res) => {
 
 const createArticleContentNew = async (req, res) => {
   const body = req.body;
-  console.log(req);
+  const userId = req.userId;
+  const user = await db.users.findById(userId);
+  if (!user) {
+    res.status(401).send("No current User");
+  }
   const articlenew = new db.articlesnew({
     title: body.title,
     text: body.text,
-    authorName: body.authorName,
+    authorName: user.username,
     image: body.image,
+    user: userId,
   });
-
+  // console.log({
+  //   title: body.title,
+  //   text: body.text,
+  //   authorName: body.authorName,
+  //   image: body.image,
+  // });
   try {
+    if (!userId)
+      return res.status(500).send({
+        messgae: "Please Log in",
+        data: response,
+        status: 500,
+      });
     const response = await articlenew.save();
     res.status(200).send({
       message: " Creat Article successfully",
@@ -61,12 +77,31 @@ const createArticleContentNew = async (req, res) => {
 };
 
 const updateArticleContentNew = async (req, res) => {
-  const { id } = req.params;
+  const { articleId } = req.params;
   const body = req.body;
+  const userId = req.userId;
+  if (!userId)
+    return res.status(400).send({
+      message: "Unauthorized",
+      status: 400,
+    });
+  if (!articleId)
+    return res.status(400).send({
+      message: "articleId cannot be empty",
+    });
+
   try {
-    const response = await db.articlesnew.findByIdAndUpdate(id, body);
+    const response = await db.articlesnew.findById(articleId);
+    if (userId != response.user)
+      return res.status(400).send({
+        message: "You can't update other user's article",
+        data: response,
+        status: 400,
+      });
+
+    await db.articlesnew.findByIdAndUpdate(articleId, body);
     return res.status(200).send({
-      message: `Update article ${id} successfully`,
+      message: `Update article ${articleId} successfully`,
       data: response,
       status: 200,
     });
@@ -80,17 +115,37 @@ const updateArticleContentNew = async (req, res) => {
 };
 
 const deleteArticleContentNew = async (req, res) => {
-  const { id } = req.params;
+  const { articleId } = req.params;
+  const userId = req.userId;
+  if (!userId)
+    return res.status(400).send({
+      message: "Unauthorized",
+      status: 400,
+    });
+  if (!articleId)
+    return res.status(400).send({
+      message: "articleId cannot be empty",
+    });
+
   try {
-    const response = await db.articlesnew.findByIdAndDelete(id);
+    const response = await db.articlesnew.findById(articleId);
+    if (userId != response.user) {
+      return res.status(400).send({
+        message: "You can't delete other user's article",
+        data: response,
+        status: 400,
+      });
+    }
+
+    await db.articlesnew.findByIdAndDelete(articleId);
     return res.status(200).send({
-      messgae: "successfully deleted article",
+      message: "successfully deleted article",
       data: response,
       status: 200,
     });
   } catch (error) {
     res.status(500).send({
-      messge: "delete article unsuccessfully",
+      message: "delete article unsuccessfully",
       data: error,
       status: 500,
     });

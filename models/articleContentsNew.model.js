@@ -25,6 +25,7 @@ const articleSchemaNew = mongoose.Schema({
       ref: "contents"
     },
   ],
+  user:{type: mongoose.Schema.Types.ObjectId, ref:"user"},
   date: { type: Date, default: Date.now },
 });
 
