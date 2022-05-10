@@ -8,8 +8,12 @@ module.exports = (app) => {
     );
     next();
   });
+  // app.get("/place/articlesnew", controller.getArticleContentsNew);
+  // app.post("/place/articlesnew",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.createArticleContentNew);
+  // app.put("/place/articlesnew/:articleId",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.updateArticleContentNew);
+  // app.delete("/place/articlesnew/:articleId",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.deleteArticleContentNew);
   app.get("/place/articlesnew", controller.getArticleContentsNew);
-  app.post("/place/articlesnew",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.createArticleContentNew);
-  app.put("/place/articlesnew/:articleId",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.updateArticleContentNew);
-  app.delete("/place/articlesnew/:articleId",[authJwt.verifyToken,authJwt.isAdminOrUser], controller.deleteArticleContentNew);
+  app.post("/place/articlesnew", controller.createArticleContentNew);
+  app.put("/place/articlesnew/:articleId", controller.updateArticleContentNew);
+  app.delete("/place/articlesnew/:articleId", controller.deleteArticleContentNew);
 };

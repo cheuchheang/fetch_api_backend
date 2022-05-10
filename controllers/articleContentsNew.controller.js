@@ -36,17 +36,18 @@ const getArticleContentsNew = async (req, res) => {
 
 const createArticleContentNew = async (req, res) => {
   const body = req.body;
-  const userId = req.userId;
-  const user = await db.users.findById(userId);
-  if (!user) {
-    res.status(401).send("No current User");
-  }
+  // const userId = req.userId;
+  // const user = await db.users.findById(userId);
+  // if (!user) {
+  //   res.status(401).send("No current User");
+  // }
   const articlenew = new db.articlesnew({
     title: body.title,
     text: body.text,
-    authorName: user.username,
+    // authorName: user.username,
+    authorName: body.authorName,
     image: body.image,
-    user: userId,
+    // user: userId,
   });
   // console.log({
   //   title: body.title,
@@ -55,12 +56,12 @@ const createArticleContentNew = async (req, res) => {
   //   image: body.image,
   // });
   try {
-    if (!userId)
-      return res.status(500).send({
-        messgae: "Please Log in",
-        data: response,
-        status: 500,
-      });
+    // if (!userId)
+    //   return res.status(500).send({
+    //     messgae: "Please Log in",
+    //     data: response,
+    //     status: 500,
+    //   });
     const response = await articlenew.save();
     res.status(200).send({
       message: " Creat Article successfully",
